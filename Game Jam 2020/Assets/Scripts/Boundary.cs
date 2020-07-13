@@ -13,6 +13,8 @@ public class Boundary : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             GameObject player = other.gameObject;
+            player.GetComponent<PlayerStat>().deathCounter += 1;
+            player.GetComponent<PlayerStat>().deathCounterText.text = player.GetComponent<PlayerStat>().deathCounter.ToString();
             player.GetComponent<FauxGravityBody>().placeOnSurface = false;
             Teleport(player);
         }

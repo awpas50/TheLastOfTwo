@@ -28,7 +28,18 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Input.GetKey(up))
+        if (Input.GetKey(left))
+        {
+            transform.Rotate(new Vector3(0, -1, 0) * Time.deltaTime * rotationSpeed, Space.Self);
+        }
+        if (Input.GetKey(right))
+        {
+            transform.Rotate(new Vector3(0, 1, 0) * Time.deltaTime * rotationSpeed, Space.Self);
+        }
+        Vector3 yRotation = Vector3.up * rotation * rotationSpeed * Time.fixedDeltaTime;
+        Quaternion deltaRotation = Quaternion.Euler(yRotation);
+        Quaternion targetRotation = rb.rotation * deltaRotation;
+        if (Input.GetKey(up))
         {
             rb.MovePosition(rb.position + transform.forward * moveSpeed * Time.fixedDeltaTime);
         }
@@ -36,17 +47,14 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.MovePosition(rb.position + transform.forward * -moveSpeed * Time.fixedDeltaTime);
         }
-        Vector3 yRotation = Vector3.up * rotation * rotationSpeed * Time.fixedDeltaTime;
-        Quaternion deltaRotation = Quaternion.Euler(yRotation);
-        Quaternion targetRotation = rb.rotation * deltaRotation;
-        if (Input.GetKey(left))
-        {
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 50f * Time.deltaTime));
-        }
-        if (Input.GetKey(right))
-        {
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 50f * Time.deltaTime));
-        }
+        //if (Input.GetKey(left))
+        //{
+        //    rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 50f * Time.deltaTime));
+        //}
+        //if (Input.GetKey(right))
+        //{
+        //    rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 50f * Time.deltaTime));
+        //}
         
         //transform.Rotate(0f, rotation * rotationSpeed * Time.fixedDeltaTime, 0f, Space.Self);
     }

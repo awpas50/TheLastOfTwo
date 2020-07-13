@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3131302430188201954}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 3131302430870656159}
   - component: {fileID: 3131302430870656158}
   - component: {fileID: 7005693076214544710}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -61,15 +61,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3131302430870656150}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.49, y: 0.48, z: -12.68}
-  m_LocalScale: {x: 0.78564, y: 0.2, z: 0.78564}
+  m_LocalScale: {x: 0.78564, y: 0.4, z: 0.78564}
   m_Children:
   - {fileID: 3131302430188201954}
   - {fileID: 1718726476491712113}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3131302430870656154
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9aba10347e1b4d8d33ef87395fb99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 7.5
   rotationSpeed: 400
   up: 119
   left: 97
@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a41e07477a720646929af8d4a6a5707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: -10
   placeOnSurface: 0
 --- !u!114 &3131302430870656158
 MonoBehaviour:
@@ -192,7 +193,7 @@ MonoBehaviour:
   bullet: {fileID: 2205327976212282486, guid: fcde867ec387f354db0778c457ed2ae3, type: 3}
   fireLocation: {fileID: 3131302430188201955}
   shoot: 32
-  fireRate: 1
+  fireRate: 0.5
 --- !u!114 &7005693076214544710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,8 +206,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9456576027da98842909c7895e21a6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: 3
+  HealthBar: {fileID: 0}
+  playerHealth: 100
   respawnLocation: {fileID: 0}
+  deathCounter: 0
+  deathCounterText: {fileID: 0}
 --- !u!1 &3771030152369738723
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +221,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1718726476491712113}
   - component: {fileID: 4900701361587599566}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +237,7 @@ Transform:
   m_GameObject: {fileID: 3771030152369738723}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 3131302430870656153}
   m_RootOrder: 1

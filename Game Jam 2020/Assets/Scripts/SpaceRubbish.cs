@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class SpaceRubbish : MonoBehaviour
 {
-    //public GameObject explosion;
+    public GameObject explosion;
     public BoxCollider boxCol;
+    GameObject planet;
     //public ParticleSystem trail;
+
+    private void Start()
+    {
+        planet = GameObject.FindGameObjectWithTag("Planet");
+    }
 
     void OnCollisionEnter(Collision col)
     {
-        Quaternion rot = Quaternion.LookRotation(transform.position.normalized);
-        rot *= Quaternion.Euler(90f, 0f, 0f);
-        //Instantiate(explosion, col.contacts[0].point, rot);
+        GameObject explosionPrefab = Instantiate(explosion, col.contacts[0].point + new Vector3(0,0,-2), Quaternion.identity);
 
-        //boxCol.enabled = false;
-        //trail.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        AudioManager.instance.Play(SoundList.ExplosionEffect1);
+        // VFX rotation
+        //Vector3 dir = planet.transform.position - transform.position;
+        //Quaternion rotation = Quaternion.Euler(-dir.x, -dir.y, -dir.z);
+        //explosionPrefab.transform.rotation = rotation;
 
-        this.enabled = false;
-        //GetComponent<AudioSource>().Stop();
-
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 0.2f);
+        Destroy(explosionPrefab, 3f);
+        
     }
 
     //private void OnTriggerEnter(Collider other)

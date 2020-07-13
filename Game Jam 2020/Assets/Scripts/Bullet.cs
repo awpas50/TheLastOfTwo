@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     private GameObject planet;
     public float damage;
     public GameObject particleEffect;
+    public GameObject particleEffect2;
     public float moveSpeed;
     public float rotationSpeed;
 
@@ -38,12 +39,11 @@ public class Bullet : MonoBehaviour
         {
             
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
+            GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
             isSpawned = true;
             Vector3 dir = planet.transform.position - transform.position;
             Quaternion rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
             particleEffectPrefab.transform.rotation = rotation;
-
-            
         }
         Destroy(gameObject, surviveTime);
     }
@@ -69,6 +69,8 @@ public class Bullet : MonoBehaviour
 
             Destroy(gameObject);
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
+            GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
+
             Vector3 dir = planet.transform.position - transform.position;
             Quaternion rotation = Quaternion.Euler(-dir.x, -dir.y, -dir.z);
             particleEffectPrefab.transform.rotation = rotation;
