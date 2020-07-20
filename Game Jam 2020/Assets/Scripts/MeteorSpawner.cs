@@ -4,31 +4,33 @@ using UnityEngine;
 
 public class MeteorSpawner : MonoBehaviour
 {
+    GameManager gameManager;
+
     public GameObject spaceRubbish1;
     public GameObject spaceRubbish2;
     public GameObject spaceRubbish3;
     public GameObject spaceRubbish4;
+
+    [Header("Space Rubbish Data")]
     public float distance = 20f;
-    public float interval;
-
-    public GameObject[] rocketArray;
-    public int maxRocketNum;
-    public bool canSpawn;
-
     private float spawnTimer;
-    public float spawnRate; // 1
+    [HideInInspector] public float spawnRate;
+    public float spawnRateMin;
+    public float spawnRateMax;
+    public int maxRocketNum;
+    public GameObject[] rocketArray;
 
-    public int seed;
+    private bool canSpawn = true;
+    private int seed;
 
     private void Start()
     {
-        canSpawn = true;
-        spawnRate = Random.Range(0.2f, 1.8f);
+        gameManager = gameObject.GetComponent<GameManager>();
     }
     private void Update()
     {
-        spawnRate = Random.Range(0.2f, 1.8f);
-        seed = Random.Range(0, 4); // 0,1,2,3
+        spawnRate = Random.Range(spawnRateMin, spawnRateMax);
+        seed = Random.Range(0, 3); // 0,1,2
         rocketArray = GameObject.FindGameObjectsWithTag("Rocket");
         if(rocketArray.Length < maxRocketNum) // 0,1,2,3,4
         {
@@ -40,9 +42,8 @@ public class MeteorSpawner : MonoBehaviour
         }
 
         //Spawn rocket
-        if (canSpawn && Time.time > spawnTimer)
+        if (canSpawn && Time.time > spawnTimer && gameManager.roundTime >= 2)
         {
-            Debug.Log(spawnTimer + " " + canSpawn);
             spawnTimer = Time.time + spawnRate;
             Vector3 pos = Random.onUnitSphere * distance;
             if(seed == 0)
@@ -51,17 +52,12 @@ public class MeteorSpawner : MonoBehaviour
             }
             if (seed == 1)
             {
-                Instantiate(spaceRubbish2, pos, Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f)));
+                Instantiate(spaceRubbish3, pos, Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f)));
             }
             if (seed == 2)
             {
-                Instantiate(spaceRubbish3, pos, Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f)));
-            }
-            if (seed == 3)
-            {
                 Instantiate(spaceRubbish4, pos, Quaternion.Euler(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f)));
             }
-            
         }
     }
 }

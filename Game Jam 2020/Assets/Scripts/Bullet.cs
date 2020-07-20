@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public GameObject playerWhoShoot;
     private GameObject planet;
     public float damage;
     public GameObject particleEffect;
     public GameObject particleEffect2;
+    public GameObject attachedParticle;
     public float moveSpeed;
     public float rotationSpeed;
 
@@ -18,6 +20,12 @@ public class Bullet : MonoBehaviour
     public bool isSpawned = false;
 
     public float surviveTime;
+
+    public void RecognizePlayer(PlayerShooting _playerShootingScript)
+    {
+        playerWhoShoot = _playerShootingScript.gameObject;
+    }
+
     void Start()
     {
         particleEffectTimer = 0;
@@ -26,7 +34,7 @@ public class Bullet : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         particleEffectTimer += Time.deltaTime;
         rb.MovePosition(rb.position + transform.forward * moveSpeed * Time.fixedDeltaTime);
@@ -40,27 +48,19 @@ public class Bullet : MonoBehaviour
             
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
             GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
+            //attachedParticle.transform.parent = null;
             isSpawned = true;
-            Vector3 dir = planet.transform.position - transform.position;
-            Quaternion rotation = Quaternion.Euler(dir.x, dir.y, dir.z);
-            particleEffectPrefab.transform.rotation = rotation;
         }
         Destroy(gameObject, surviveTime);
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.tag == "Player")
-    //    {
-    //        other.gameObject.GetComponent<FauxGravityBody>().placeOnSurface = false;
-    //        other.gameObject.GetComponent<PlayerStat>().playerHealth -= damage;
-    //        Destroy(gameObject);
-    //    }
-    //}
-
     private void OnCollisionEnter(Collision col)
     {
-        if (col.collider.gameObject.tag == "Player")
+        if(col.collider.gameObject == playerWhoShoot)
+        {
+            return;
+        }
+        else if (col.collider.gameObject.tag == "Player")
         {
             col.collider.gameObject.GetComponent<FauxGravityBody>().placeOnSurface = false;
             col.collider.gameObject.GetComponent<PlayerStat>().playerHealth -= damage;
@@ -70,10 +70,16 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
             GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
-
-            Vector3 dir = planet.transform.position - transform.position;
-            Quaternion rotation = Quaternion.Euler(-dir.x, -dir.y, -dir.z);
-            particleEffectPrefab.transform.rotation = rotation;
+            // detach the Particle System from the object being destroyed
+            attachedParticle.transform.parent = null;
+        }
+        if(col.collider.gameObject.tag == "Rock")
+        {
+            Destroy(gameObject);
+            GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
+            GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
+            // detach the Particle System from the object being destroyed
+            attachedParticle.transform.parent = null;
         }
     }
 }

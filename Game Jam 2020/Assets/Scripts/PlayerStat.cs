@@ -27,7 +27,7 @@ public class PlayerStat : MonoBehaviour
         if (playerHealth <= 0)
         {
             // player respawn sound
-            AudioManager.instance.PlayOnce(SoundList.PlayerFallEffect);
+            AudioManager.instance.Play(SoundList.PlayerFallEffect);
             CameraShaker.Instance.ShakeOnce(8f, 4f, 0.1f, 1f);
             transform.position = respawnLocation.transform.position;
             deathCounter += 1;
@@ -44,11 +44,12 @@ public class PlayerStat : MonoBehaviour
             AudioManager.instance.Play(SoundList.PlayerFallEffect);
             CameraShaker.Instance.ShakeOnce(8f, 4f, 0.1f, 1f);
             transform.position = respawnLocation.transform.position;
+
             deathCounter += 1;
             deathCounterText.text = deathCounter.ToString();
             playerHealth = playerinitialHealth;
 
-            Destroy(collision.collider.gameObject.gameObject);
+            Destroy(collision.collider.gameObject);
         }
     }
 }

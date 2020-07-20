@@ -23,6 +23,7 @@ public class Boundary : MonoBehaviour
     void Teleport(GameObject player)
     {
         CameraShaker.Instance.ShakeOnce(8f, 4f, 0.1f, 1f);
+        AudioManager.instance.Play(SoundList.PlayerFallEffect);
         player.transform.position = respawnLocation1.transform.position;
     }
 }

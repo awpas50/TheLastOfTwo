@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
+    [HideInInspector] public float initialSpeed;
     public float speed;
-    public int seed = 0;
+    private int seed = 0;
 
     private void Start()
     {
+        initialSpeed = speed;
         seed = Random.Range(0, 2); // 0 ~ 1
     }
     void Update()

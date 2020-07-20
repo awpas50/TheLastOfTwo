@@ -6,62 +6,106 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public float roundTime;
+    [Header("SFX")]
     public AudioSource audioSource;
+    [Header("VFX")]
     public AudioClip rocketFallEffect;
-
+    [Header("UI")]
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI endGameText;
-    public float roundTime;
-
+    public GameObject endGameUI;
+    public GameObject FadeScreen;
+    [Header("Ref")]
     public GameObject player1;
     public GameObject player2;
-
-    public MeteorSpawner meteorSpawner;
-
-    public bool isBigRocketSpawned = false;
-    public GameObject bigRocket;
     public GameObject mainCam;
+    public CameraRotation cameraRotation;
+    private MeteorSpawner meteorSpawner;
+    public GameObject bigRocket;
+    public bool isBigRocketSpawned = false;
 
-    public GameObject endGameUI;
+    float t1 = 0;
+    float t2 = 0;
+    float t3 = 0;
 
     private void Start()
     {
+        meteorSpawner = gameObject.GetComponent<MeteorSpawner>();
         StartCoroutine(CountdownToStart());
         endGameUI.SetActive(false);
         endGameText.text = "";
+
+        EnablePlayerControl();
     }
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //}
+        //SFX
         PlayRocketFallSoundFX();
-        if(roundTime >= 180 && roundTime <= 240)
+
+        //DEBUG
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            meteorSpawner.distance = 200;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        if (roundTime >= 120 && roundTime <= 179)
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            meteorSpawner.distance = 130;
+            roundTime = 7;
         }
-        if (roundTime >= 60 && roundTime <= 119)
+
+        //Timer
+        if (roundTime >= 60)
         {
-            meteorSpawner.distance = 60;
+            t1 += Time.deltaTime;
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 1f, cameraRotation.initialSpeed * 25f, t1 / 180);
         }
-        if (roundTime >= 0 && roundTime <= 59)
+        if (roundTime >= 10 && roundTime <= 59)
         {
-            meteorSpawner.distance = 20;
+            t2 += Time.deltaTime;
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 25f, cameraRotation.initialSpeed * 12f, t2 / 50);
         }
-        if(roundTime <= 8 && !isBigRocketSpawned)
+        if (roundTime <= 6f)
         {
-            Instantiate(bigRocket, mainCam.transform.position, Quaternion.identity);
-            isBigRocketSpawned = true;
+            t3 += Time.deltaTime;
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 12f, cameraRotation.initialSpeed * 4f, t3 / 6);
+            mainCam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(60, 75, t3 / 1);
+            if (!isBigRocketSpawned)
+            {
+                Instantiate(bigRocket, mainCam.transform.position, Quaternion.identity);
+                isBigRocketSpawned = true;
+            }
         }
-        if (roundTime <= 0)
+        if (roundTime == 0)
         {
             EndGame();
+            DisablePlayerControl();
         }
+
+        //if(roundTime >= 187)
+        //{
+        //    meteorSpawner.distance = 200;
+        //}
+        //if (roundTime >= 120 && roundTime <= 186)
+        //{
+        //    meteorSpawner.distance = 150;
+        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 1f, cameraRotation.initialSpeed * 3f, 5);
+        //}
+        //if (roundTime >= 60 && roundTime <= 119)
+        //{
+        //    meteorSpawner.distance = 90;
+        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 3f, cameraRotation.initialSpeed * 6f, 5);
+        //}
+        //if (roundTime >= 10 && roundTime <= 59)
+        //{
+        //    meteorSpawner.distance = 60;
+        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 6f, cameraRotation.initialSpeed * 15f, 5);
+        //}
+        //if (roundTime <= 5.5f)
+        //{
+        //    meteorSpawner.distance = 20;
+        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 15f, cameraRotation.initialSpeed * 2f, 2);
+        //}
+
     }
 
     void EndGame()
@@ -92,11 +136,33 @@ public class GameManager : MonoBehaviour
             roundTime--;
         }
     }
+
+    //SFX
     void PlayRocketFallSoundFX()
     {
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(rocketFallEffect);
         }
+    }
+
+    void EnablePlayerControl()
+    {
+        player1.GetComponent<PlayerMovement>().enabled = true;
+        player1.GetComponent<PlayerShooting>().enabled = true;
+        player1.GetComponent<PlayerStat>().enabled = true;
+        player2.GetComponent<PlayerMovement>().enabled = true;
+        player2.GetComponent<PlayerShooting>().enabled = true;
+        player2.GetComponent<PlayerStat>().enabled = true;
+    }
+
+    void DisablePlayerControl()
+    {
+        player1.GetComponent<PlayerMovement>().enabled = false;
+        player1.GetComponent<PlayerShooting>().enabled = false;
+        player1.GetComponent<PlayerStat>().enabled = false;
+        player2.GetComponent<PlayerMovement>().enabled = false;
+        player2.GetComponent<PlayerShooting>().enabled = false;
+        player2.GetComponent<PlayerStat>().enabled = false;
     }
 }

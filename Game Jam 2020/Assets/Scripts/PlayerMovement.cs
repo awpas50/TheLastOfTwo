@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameObject mainCam;
     public float moveSpeed;
     public float rotationSpeed;
 
@@ -55,7 +56,5 @@ public class PlayerMovement : MonoBehaviour
         //{
         //    rb.MoveRotation(Quaternion.Slerp(rb.rotation, targetRotation, 50f * Time.deltaTime));
         //}
-        
-        //transform.Rotate(0f, rotation * rotationSpeed * Time.fixedDeltaTime, 0f, Space.Self);
     }
 }
