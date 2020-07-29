@@ -8,48 +8,58 @@ public class PlayerStat : MonoBehaviour
 {
     public GameObject HealthBar;
     public float playerHealth;
-    private float playerinitialHealth;
+    [HideInInspector] public float playerinitialHealth;
     public GameObject respawnLocation;
+    public GameObject opponent;
+    public int score;
+    public TextMeshProUGUI scoreText;
 
-    public int deathCounter;
-    public TextMeshProUGUI deathCounterText;
-    // Start is called before the first frame update
     void Start()
     {
         HealthBar.GetComponent<Healthbar>().health = playerHealth;
         playerinitialHealth = playerHealth;
     }
 
-    // Update is called once per frame
     void Update()
     {
         HealthBar.GetComponent<Healthbar>().health = playerHealth;
         if (playerHealth <= 0)
         {
-            // player respawn sound
             AudioManager.instance.Play(SoundList.PlayerFallEffect);
             CameraShaker.Instance.ShakeOnce(8f, 4f, 0.1f, 1f);
-            transform.position = respawnLocation.transform.position;
-            deathCounter += 1;
-            deathCounterText.text = deathCounter.ToString();
-
-            playerHealth = playerinitialHealth;
+            RestoreHealth();
+            AddScore(opponent);
+            Respawn(respawnLocation);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Player died
         if (collision.collider.gameObject.tag == "Rocket")
         {
             AudioManager.instance.Play(SoundList.PlayerFallEffect);
             CameraShaker.Instance.ShakeOnce(8f, 4f, 0.1f, 1f);
-            transform.position = respawnLocation.transform.position;
-
-            deathCounter += 1;
-            deathCounterText.text = deathCounter.ToString();
-            playerHealth = playerinitialHealth;
-
+            RestoreHealth();
+            AddScore(opponent);
+            Respawn(respawnLocation);
+            //Destroy rocket
             Destroy(collision.collider.gameObject);
         }
+    }
+
+    public void RestoreHealth()
+    {
+        playerHealth = playerinitialHealth;
+    }
+    public void Respawn(GameObject respawnLocation)
+    {
+        transform.position = respawnLocation.transform.position;
+    }
+    public void AddScore(GameObject opponent)
+    {
+        PlayerStat opponentStat = opponent.GetComponent<PlayerStat>();
+        opponentStat.score += 1;
+        opponentStat.scoreText.text = opponentStat.score.ToString();
     }
 }

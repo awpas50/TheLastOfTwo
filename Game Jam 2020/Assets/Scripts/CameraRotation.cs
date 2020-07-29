@@ -15,13 +15,15 @@ public class CameraRotation : MonoBehaviour
     }
     void Update()
     {
-        if(seed == 0)
+        float rndX = Random.Range(0.2f, 1f);
+        float rndY = Random.Range(0.2f, 1f);
+        if (seed == 0)
         {
-            transform.Rotate(speed * Random.Range(0.5f, 0.8f) * Time.deltaTime, speed * Random.Range(0.6f, 1.2f) * Time.deltaTime, 0);
+            transform.Rotate(speed * rndX * Time.deltaTime, speed * rndY * Time.deltaTime, 0);
         }
         else if (seed == 1)
         {
-            transform.Rotate(-speed * Random.Range(0.5f, 0.8f) * Time.deltaTime, -speed * Random.Range(0.6f, 1.2f) * Time.deltaTime, 0);
+            transform.Rotate(-speed * rndX * Time.deltaTime, -speed * rndY * Time.deltaTime, 0);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -8,17 +9,22 @@ public class GameManager : MonoBehaviour
 {
     public float roundTime;
     [Header("SFX")]
-    public AudioSource audioSource;
-    [Header("VFX")]
-    public AudioClip rocketFallEffect;
+    public AudioSource mainMusic;
+    private AudioSource[] allAudioSources;
     [Header("UI")]
+    public Canvas PauseUI;
+    public Canvas AllUI;
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI endGameText;
     public GameObject endGameUI;
-    public GameObject FadeScreen;
+    public TextMeshProUGUI tipsText1;
+    public TextMeshProUGUI tipsText2;
+    public GameObject playerTag1;
+    public GameObject playerTag2;
     [Header("Ref")]
     public GameObject player1;
     public GameObject player2;
+    public GameObject mainMenuController;
     public GameObject mainCam;
     public CameraRotation cameraRotation;
     private MeteorSpawner meteorSpawner;
@@ -29,46 +35,90 @@ public class GameManager : MonoBehaviour
     float t2 = 0;
     float t3 = 0;
 
+    [HideInInspector] public bool buttonTstate = true;
+    [HideInInspector] public bool buttonYstate = true;
+    [HideInInspector] public bool buttonUstate = true;
     private void Start()
     {
         meteorSpawner = gameObject.GetComponent<MeteorSpawner>();
         StartCoroutine(CountdownToStart());
         endGameUI.SetActive(false);
         endGameText.text = "";
-
         EnablePlayerControl();
+
+        StartCoroutine(PlayRocketFallSoundFX(5));
     }
     void Update()
     {
-        //SFX
-        PlayRocketFallSoundFX();
-
-        //DEBUG
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            roundTime = 7;
+            buttonTstate = !buttonTstate;
         }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            buttonYstate = !buttonYstate;
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            buttonUstate = !buttonUstate;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!mainMenuController.GetComponent<PauseMenu>().isPaused)
+            {
+                mainMenuController.GetComponent<PauseMenu>().isPaused = true;
+                mainMenuController.GetComponent<PauseMenu>().Pause();
+            }
+            else
+            {
+                mainMenuController.GetComponent<PauseMenu>().isPaused = false;
+                mainMenuController.GetComponent<PauseMenu>().Resume();
+            }
+        }
+        //if (!buttonTstate) {
+        //    tipsText1.text = "[T] Tips OFF";
+        //    playerText1.enabled = false;
+        //    playerText2.enabled = false;
+        //} else {
+        //    tipsText1.text = "[T] Tips ON";
+        //    playerText1.enabled = true;
+        //    playerText2.enabled = true;
+        //}
+        //if (!buttonYstate) {
+        //    tipsText2.text = "[Y] Indicator OFF";
+        //    playerTag1.SetActive(false);
+        //    playerTag2.SetActive(false);
+        //} else {
+        //    tipsText2.text = "[Y] Indicator ON";
+        //    playerTag1.SetActive(true);
+        //    playerTag2.SetActive(true);
+        //}
+        //if (!buttonUstate) {
+        //    AllUI.enabled = false;
+        //}
+        //else {
+        //    AllUI.enabled = true;
+        //}
 
         //Timer
-        if (roundTime >= 60)
+        if (roundTime >= 30)
         {
             t1 += Time.deltaTime;
-            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 1f, cameraRotation.initialSpeed * 25f, t1 / 180);
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 1f, cameraRotation.initialSpeed * 30f, t1 / 180);
         }
-        if (roundTime >= 10 && roundTime <= 59)
+        if (roundTime >= 10 && roundTime <= 29)
         {
             t2 += Time.deltaTime;
-            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 25f, cameraRotation.initialSpeed * 12f, t2 / 50);
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 30f, cameraRotation.initialSpeed * 12f, t2 / 20);
         }
-        if (roundTime <= 6f)
+        if(roundTime < 6.5f)
+        {
+            mainCam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(60, 75, t3 / 1);
+        }
+        if (roundTime <= 5.5f)
         {
             t3 += Time.deltaTime;
-            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 12f, cameraRotation.initialSpeed * 4f, t3 / 6);
-            mainCam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(60, 75, t3 / 1);
+            cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 12f, cameraRotation.initialSpeed * 4f, t3 / 2.5f);
             if (!isBigRocketSpawned)
             {
                 Instantiate(bigRocket, mainCam.transform.position, Quaternion.identity);
@@ -80,50 +130,21 @@ public class GameManager : MonoBehaviour
             EndGame();
             DisablePlayerControl();
         }
-
-        //if(roundTime >= 187)
-        //{
-        //    meteorSpawner.distance = 200;
-        //}
-        //if (roundTime >= 120 && roundTime <= 186)
-        //{
-        //    meteorSpawner.distance = 150;
-        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 1f, cameraRotation.initialSpeed * 3f, 5);
-        //}
-        //if (roundTime >= 60 && roundTime <= 119)
-        //{
-        //    meteorSpawner.distance = 90;
-        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 3f, cameraRotation.initialSpeed * 6f, 5);
-        //}
-        //if (roundTime >= 10 && roundTime <= 59)
-        //{
-        //    meteorSpawner.distance = 60;
-        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 6f, cameraRotation.initialSpeed * 15f, 5);
-        //}
-        //if (roundTime <= 5.5f)
-        //{
-        //    meteorSpawner.distance = 20;
-        //    cameraRotation.speed = Mathf.Lerp(cameraRotation.initialSpeed * 15f, cameraRotation.initialSpeed * 2f, 2);
-        //}
-
     }
 
     void EndGame()
     {
         endGameUI.SetActive(true);
-        if (player1.GetComponent<PlayerStat>().deathCounter < player2.GetComponent<PlayerStat>().deathCounter)
+        if (player1.GetComponent<PlayerStat>().score < player2.GetComponent<PlayerStat>().score)
         {
-            Debug.Log("Abby Wins!");
-            endGameText.text = "Abby Wins!";
-        }
-        if (player1.GetComponent<PlayerStat>().deathCounter > player2.GetComponent<PlayerStat>().deathCounter)
-        {
-            Debug.Log("Ellie Wins!");
             endGameText.text = "Ellie Wins!";
         }
-        if (player1.GetComponent<PlayerStat>().deathCounter == player2.GetComponent<PlayerStat>().deathCounter)
+        if (player1.GetComponent<PlayerStat>().score > player2.GetComponent<PlayerStat>().score)
         {
-            Debug.Log("Draw!");
+            endGameText.text = "Abby Wins!";
+        }
+        if (player1.GetComponent<PlayerStat>().score == player2.GetComponent<PlayerStat>().score)
+        {
             endGameText.text = "Draw!";
         }
     }
@@ -138,15 +159,20 @@ public class GameManager : MonoBehaviour
     }
 
     //SFX
-    void PlayRocketFallSoundFX()
+    IEnumerator PlayRocketFallSoundFX(float interval)
     {
-        if (!audioSource.isPlaying)
+        if (!mainMenuController.GetComponent<PauseMenu>().isPaused)
         {
-            audioSource.PlayOneShot(rocketFallEffect);
+            yield return new WaitForSeconds(interval);
+            AudioManager.instance.Play(SoundList.RocketFallEffect);
+        }
+        else
+        {
+            yield return null;
         }
     }
 
-    void EnablePlayerControl()
+    public void EnablePlayerControl()
     {
         player1.GetComponent<PlayerMovement>().enabled = true;
         player1.GetComponent<PlayerShooting>().enabled = true;
@@ -156,7 +182,7 @@ public class GameManager : MonoBehaviour
         player2.GetComponent<PlayerStat>().enabled = true;
     }
 
-    void DisablePlayerControl()
+    public void DisablePlayerControl()
     {
         player1.GetComponent<PlayerMovement>().enabled = false;
         player1.GetComponent<PlayerShooting>().enabled = false;
@@ -164,5 +190,21 @@ public class GameManager : MonoBehaviour
         player2.GetComponent<PlayerMovement>().enabled = false;
         player2.GetComponent<PlayerShooting>().enabled = false;
         player2.GetComponent<PlayerStat>().enabled = false;
+    }
+    public void PauseAllAudio()
+    {
+        allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+        foreach (AudioSource audioS in allAudioSources)
+        {
+            audioS.Pause();
+        }
+    }
+    public void ResumeAllAudio()
+    {
+        allAudioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+        foreach (AudioSource audioS in allAudioSources)
+        {
+            audioS.UnPause();
+        }
     }
 }

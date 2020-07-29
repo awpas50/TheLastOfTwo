@@ -11,8 +11,6 @@ public class RockSpawner : MonoBehaviour
     public int plantNumber;
     public GameObject[] plantList;
 
-    int seed = 0;
-
     void Start()
     {
         planet = GameObject.FindGameObjectWithTag("Planet");

@@ -9,7 +9,6 @@ public class Bullet : MonoBehaviour
     public float damage;
     public GameObject particleEffect;
     public GameObject particleEffect2;
-    public GameObject attachedParticle;
     public float moveSpeed;
     public float rotationSpeed;
 
@@ -48,7 +47,6 @@ public class Bullet : MonoBehaviour
             
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
             GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
-            //attachedParticle.transform.parent = null;
             isSpawned = true;
         }
         Destroy(gameObject, surviveTime);
@@ -70,16 +68,12 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
             GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
-            // detach the Particle System from the object being destroyed
-            attachedParticle.transform.parent = null;
         }
         if(col.collider.gameObject.tag == "Rock")
         {
             Destroy(gameObject);
             GameObject particleEffectPrefab = Instantiate(particleEffect, transform.position, Quaternion.identity);
             GameObject particleEffectPrefab2 = Instantiate(particleEffect2, transform.position, Quaternion.identity);
-            // detach the Particle System from the object being destroyed
-            attachedParticle.transform.parent = null;
         }
     }
 }

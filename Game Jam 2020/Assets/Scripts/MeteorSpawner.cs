@@ -30,7 +30,7 @@ public class MeteorSpawner : MonoBehaviour
     private void Update()
     {
         spawnRate = Random.Range(spawnRateMin, spawnRateMax);
-        seed = Random.Range(0, 3); // 0,1,2
+        
         rocketArray = GameObject.FindGameObjectsWithTag("Rocket");
         if(rocketArray.Length < maxRocketNum) // 0,1,2,3,4
         {
@@ -42,8 +42,9 @@ public class MeteorSpawner : MonoBehaviour
         }
 
         //Spawn rocket
-        if (canSpawn && Time.time > spawnTimer && gameManager.roundTime >= 2)
+        if (canSpawn && Time.time > spawnTimer && gameManager.roundTime >= 10)
         {
+            seed = Random.Range(0, 3); // 0,1,2
             spawnTimer = Time.time + spawnRate;
             Vector3 pos = Random.onUnitSphere * distance;
             if(seed == 0)

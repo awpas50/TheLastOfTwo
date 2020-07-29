@@ -6,13 +6,10 @@ using UnityEngine.UI;
 public class EasterEgg : MonoBehaviour
 {
     public int counter = 0;
-    public GameObject easterEggScene;
-    public Text option;
+    public GameObject[] easterEggPicList;
 
-    public void Start()
-    {
-        easterEggScene.SetActive(false);
-    }
+    public Text option;
+    
     public void ButtonClick()
     {
         counter++;
@@ -20,22 +17,69 @@ public class EasterEgg : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(counter >= 3 && counter <= 5)
+        switch(counter)
         {
-            option.text = "No Option Avaliable";
-        }
-        if (counter >= 6 && counter <= 7)
-        {
-            option.text = "Don't Click me!";
-        }
-        if (counter >= 8 && counter <= 9)
-        {
-            option.text = "NO!!!!!!!";
-        }
-        if (counter >= 10)
-        {
-            option.text = ".......";
-            easterEggScene.SetActive(true);
+            case 3:
+            case 4:
+            case 5:
+                {
+                    option.text = "No Option Avaliable";
+                    break;
+                }
+            case 6:
+            case 7:
+                {
+                    option.text = "Do not touch me";
+                    break;
+                }
+            case 8:
+            case 9:
+                {
+                    option.text = "Don't Click me!";
+                    break;
+                }
+            case 10:
+                {
+                    option.text = "NO!!!!!!!";
+                    easterEggPicList[0].SetActive(true);
+                    break;
+                }
+            case 11:
+                {
+                    option.text = "I will be";
+                    easterEggPicList[1].SetActive(true);
+                    break;
+                }
+            case 12:
+                {
+                    option.text = "banned by";
+                    easterEggPicList[2].SetActive(true);
+                    break;
+                }
+            case 13:
+                {
+                    option.text = "Naughty Dog";
+                    easterEggPicList[3].SetActive(true);
+                    break;
+                }
+            case 14:
+                {
+                    option.text = "You won't";
+                    easterEggPicList[4].SetActive(true);
+                    break;
+                }
+            case 15:
+                {
+                    option.text = "see me";
+                    easterEggPicList[5].SetActive(true);
+                    break;
+                }
+            case 16:
+                {
+                    option.text = "again";
+                    easterEggPicList[6].SetActive(true);
+                    break;
+                }
         }
     }
 }
